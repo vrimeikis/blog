@@ -4,12 +4,17 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Article;
+use App\Http\Requests\ArticleStoreRequest;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Validator;
 use Illuminate\View\View;
 
+/**
+ * Class ArticleController
+ * @package App\Http\Controllers\Admin
+ */
 class ArticleController extends Controller
 {
     /**
@@ -19,7 +24,11 @@ class ArticleController extends Controller
      */
     public function index(): View
     {
-        return view('admin.article.list');
+        $paginatedArticles = Article::paginate();
+
+        return view('admin.article.list', [
+            'articles' => $paginatedArticles,
+        ]);
     }
 
     /**
@@ -35,15 +44,18 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @param ArticleStoreRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ArticleStoreRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required|string|min:5|max:191',
-            'content' => 'required|string|min:50',
+        Article::create([
+            'title' => $request->getTitle(),
+            'content' => $request->getContext(),
         ]);
+
+        return redirect()->route('admin.articles.index')
+            ->with('status', 'Article created successfully!');
     }
 
     /**
@@ -61,33 +73,44 @@ class ArticleController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return View
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
-        //
+        $article = Article::find($id);
+
+        return view('admin.article.edit', ['article' => $article]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ArticleStoreRequest $request
      * @param int $id
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(ArticleStoreRequest $request, int $id): RedirectResponse
     {
-        //
+        Article::where('id', '=', $id)->update([
+            'title' => $request->getTitle(),
+            'content' => $request->getContext(),
+        ]);
+
+        return redirect()->route('admin.articles.index')
+            ->with('status', 'Article updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
-        //
+        Article::where('id', '=', $id)->delete();
+
+        return redirect()->route('admin.articles.index')
+            ->with('status', 'Article deleted!');
     }
 }

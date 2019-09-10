@@ -32,12 +32,12 @@
 
                             <div class="form-group">
                                 <label for="title">{{ __('Title') }}</label>
-                                <input type="text" id="title" name="title" class="form-control" value="">
+                                <input type="text" id="title" name="title" class="form-control" value="{{ old('title') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="content">{{ __('Content') }}</label>
-                                <textarea class="form-control" id="content" name="content"></textarea>
+                                <textarea class="form-control" id="content" name="content">{{ old('content') }}</textarea>
                             </div>
 
                             <div class="form-group">

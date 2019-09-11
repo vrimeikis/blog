@@ -71,7 +71,7 @@ class CategoryController extends Controller
      *
      * @param CategoryStoreRequest $request
      * @param Category $category
-     * @return void
+     * @return RedirectResponse
      */
     public function update(CategoryStoreRequest $request, Category $category): RedirectResponse
     {

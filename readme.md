@@ -28,4 +28,4 @@ P.S.: If you dont use virtual machine, run `php artisan serve` command to run vi
 
 ## Deploy
 
-...
+- For first admin user run `php artisan user:create` command.

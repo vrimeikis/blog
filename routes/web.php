@@ -22,5 +22,6 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/', 'Admin\HomeController@index')->name('home');
 
         Route::resource('articles', 'Admin\ArticleController');
+        Route::resource('categories', 'Admin\CategoryController')->except(['show']);
     });
 });

@@ -32,16 +32,27 @@
 
                             <div class="form-group">
                                 <label for="title">{{ __('Title') }}</label>
-                                <input type="text" id="title" name="title" class="form-control" value="{{ old('title') }}">
+                                <input type="text" id="title" name="title" class="form-control"
+                                       value="{{ old('title') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="content">{{ __('Content') }}</label>
-                                <textarea class="form-control" id="content" name="content">{{ old('content') }}</textarea>
+                                <textarea class="form-control" id="content"
+                                          name="content">{{ old('content') }}</textarea>
                             </div>
 
                             <div class="form-group">
-                                <input class="btn btn-outline-primary" type="submit" name="submit" value="{{ __('Save') }}">
+                                <label for="categories">{{ __('Categories') }}</label>
+                                @foreach($categories as $catId => $catName)
+                                    <input id="categories" class="form-check" type="checkbox" name="categories[]" value="{{ $catId }}"> {{ $catName }}
+                                @endforeach
+                            </div>
+
+
+                            <div class="form-group">
+                                <input class="btn btn-outline-primary" type="submit" name="submit"
+                                       value="{{ __('Save') }}">
                             </div>
 
                         </form>

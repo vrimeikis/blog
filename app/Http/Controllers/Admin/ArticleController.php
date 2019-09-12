@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Http\Controllers\Admin;
 
 use App\Article;
+use App\Category;
 use App\Http\Requests\ArticleStoreRequest;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -38,7 +39,12 @@ class ArticleController extends Controller
      */
     public function create(): View
     {
-        return view('admin.article.create');
+        $categories = Category::orderBy('title')
+            ->pluck('title', 'id');
+
+        return view('admin.article.create', [
+            'categories' => $categories,
+        ]);
     }
 
     /**

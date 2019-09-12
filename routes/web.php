@@ -23,5 +23,6 @@ Route::group(['prefix' => 'admin'], function() {
 
         Route::resource('articles', 'Admin\ArticleController');
         Route::resource('categories', 'Admin\CategoryController')->except(['show']);
+        Route::resource('users', 'Admin\UserController');
     });
 });

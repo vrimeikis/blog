@@ -42,6 +42,18 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="categories">{{ __('Categories') }}</label>
+                                @foreach($categories as $catId => $catName)
+                                    <input id="categories" class="form-check" type="checkbox"
+                                           name="categories[]" value="{{ $catId }}"
+                                            {{ in_array($catId, old(
+                                            'categories',
+                                             ($errors->any() && old('categories') === null) ? [] : $article->categories->pluck('id')->toArray()
+                                             )) ? 'checked="checked"' : '' }}> {{ $catName }}
+                                @endforeach
+                            </div>
+
+                            <div class="form-group">
                                 <input class="btn btn-outline-primary" type="submit" name="submit" value="{{ __('Save') }}">
                             </div>
 

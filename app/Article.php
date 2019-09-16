@@ -6,7 +6,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * App\Article
@@ -25,6 +27,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Article whereTitle($value)
  * @method static Builder|Article whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read Collection|Category[] $categories
+ * @property-read int|null $categories_count
  */
 class Article extends Model
 {
@@ -32,4 +36,12 @@ class Article extends Model
         'title',
         'content',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

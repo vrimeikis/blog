@@ -55,10 +55,13 @@ class ArticleController extends Controller
      */
     public function store(ArticleStoreRequest $request): RedirectResponse
     {
-        Article::create([
+        /** @var Article $article */
+        $article = Article::create([
             'title' => $request->getTitle(),
             'content' => $request->getContext(),
         ]);
+
+        $article->categories()->attach($request->getCategoriesIds());
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article created successfully!');
@@ -83,24 +86,31 @@ class ArticleController extends Controller
      */
     public function edit(int $id): View
     {
-        $article = Article::find($id);
+        $article = Article::with('categories')->find($id);
+        $categories = Category::orderBy('title')
+            ->pluck('title', 'id');
 
-        return view('admin.article.edit', ['article' => $article]);
+        return view('admin.article.edit', [
+            'article' => $article,
+            'categories' => $categories,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param ArticleStoreRequest $request
-     * @param int $id
+     * @param Article $article
      * @return RedirectResponse
      */
-    public function update(ArticleStoreRequest $request, int $id): RedirectResponse
+    public function update(ArticleStoreRequest $request, Article $article): RedirectResponse
     {
-        Article::where('id', '=', $id)->update([
+        $article->update([
             'title' => $request->getTitle(),
             'content' => $request->getContext(),
         ]);
+
+        $article->categories()->sync($request->getCategoriesIds());
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article updated successfully!');

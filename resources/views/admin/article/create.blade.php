@@ -45,7 +45,9 @@
                             <div class="form-group">
                                 <label for="categories">{{ __('Categories') }}</label>
                                 @foreach($categories as $catId => $catName)
-                                    <input id="categories" class="form-check" type="checkbox" name="categories[]" value="{{ $catId }}"> {{ $catName }}
+                                    <input id="categories" class="form-check" type="checkbox"
+                                           name="categories[]" value="{{ $catId }}"
+                                    {{ in_array($catId, old('categories', [])) ? 'checked="checked"' : '' }}> {{ $catName }}
                                 @endforeach
                             </div>
 

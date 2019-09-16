@@ -32,6 +32,7 @@ class ArticleStoreRequest extends FormRequest
         return [
             'title' => 'required|string|min:5|max:191',
             'content' => 'required|string|min:10',
+            'categories' => 'nullable|array',
         ];
     }
 
@@ -49,5 +50,13 @@ class ArticleStoreRequest extends FormRequest
     public function getContext(): string
     {
         return strip_tags($this->input('content'));
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategoriesIds(): array
+    {
+        return $this->input('categories', []);
     }
 }

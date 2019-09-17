@@ -10,6 +10,7 @@ use App\Http\Requests\ArticleStoreRequest;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -63,6 +64,14 @@ class ArticleController extends Controller
 
         $article->categories()->attach($request->getCategoriesIds());
 
+        $cover = $request->getCover();
+        if ($cover !== null) {
+            $uploadedFile = $cover->store('article/'.$article->id);
+            $article->cover = $uploadedFile;
+            $article->save();
+        }
+
+
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article created successfully!');
     }
@@ -111,6 +120,19 @@ class ArticleController extends Controller
         ]);
 
         $article->categories()->sync($request->getCategoriesIds());
+
+        if ($request->getDeleteCoverOption() !== null) {
+            Storage::delete($article->cover);
+            $article->cover = null;
+            $article->save();
+        }
+
+        $cover = $request->getCover();
+        if ($cover !== null) {
+            $uploadedFile = $cover->store('article/'.$article->id);
+            $article->cover = $uploadedFile;
+            $article->save();
+        }
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article updated successfully!');

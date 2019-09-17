@@ -23,6 +23,7 @@ Blog system with comments and categories
 - Run `php artisan key:generate` command.
 - Fill `db` credentials on `.env` file.
 - Run `php artisan migrate` command.
+- Run `php artisan storage:link` command.
 
 P.S.: If you dont use virtual machine, run `php artisan serve` command to run virtual server.
 

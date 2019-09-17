@@ -26,7 +26,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.articles.store') }}" method="post">
+                        <form action="{{ route('admin.articles.store') }}" method="post" enctype="multipart/form-data">
 
                             @csrf
 
@@ -40,6 +40,11 @@
                                 <label for="content">{{ __('Content') }}</label>
                                 <textarea class="form-control" id="content"
                                           name="content">{{ old('content') }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cover">{{ __('Cover') }}</label>
+                                <input class="form-control-file" type="file" id="cover" name="cover" value="">
                             </div>
 
                             <div class="form-group">

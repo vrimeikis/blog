@@ -17,11 +17,13 @@ use Illuminate\Support\Collection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string $title
+ * @property string|null $cover
  * @property string $content
  * @method static Builder|Article newModelQuery()
  * @method static Builder|Article newQuery()
  * @method static Builder|Article query()
  * @method static Builder|Article whereContent($value)
+ * @method static Builder|Article whereCover($value)
  * @method static Builder|Article whereCreatedAt($value)
  * @method static Builder|Article whereId($value)
  * @method static Builder|Article whereTitle($value)

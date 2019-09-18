@@ -4,23 +4,27 @@ declare(strict_types = 1);
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Category
  *
  * @package App
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string $title
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereUpdatedAt($value)
+ * @property string $slug
+ * @method static Builder|Category newModelQuery()
+ * @method static Builder|Category newQuery()
+ * @method static Builder|Category query()
+ * @method static Builder|Category whereCreatedAt($value)
+ * @method static Builder|Category whereId($value)
+ * @method static Builder|Category whereTitle($value)
+ * @method static Builder|Category whereSlug($value)
+ * @method static Builder|Category whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Category extends Model
@@ -30,5 +34,6 @@ class Category extends Model
      */
     protected $fillable = [
         'title',
+        'slug',
     ];
 }

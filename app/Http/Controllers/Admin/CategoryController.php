@@ -13,6 +13,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
+/**
+ * Class CategoryController
+ * @package App\Http\Controllers\Admin
+ */
 class CategoryController extends Controller
 {
     /**
@@ -49,6 +53,7 @@ class CategoryController extends Controller
     {
         Category::create([
             'title' => $request->getTitle(),
+            'slug' => $request->getSlug(),
         ]);
 
         return redirect()->route('admin.categories.index')
@@ -63,7 +68,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
-        //
+        return view('admin.category.edit', ['category' => $category]);
     }
 
     /**
@@ -76,7 +81,11 @@ class CategoryController extends Controller
     public function update(CategoryStoreRequest $request, Category $category): RedirectResponse
     {
         $category->title = $request->getTitle();
+        $category->slug = $request->getSlug();
         $category->save();
+
+        return redirect()->route('admin.categories.index')
+            ->with('status', 'Category updated successfully!');
     }
 
     /**

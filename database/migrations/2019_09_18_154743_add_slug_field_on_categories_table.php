@@ -27,7 +27,7 @@ class AddSlugFieldOnCategoriesTable extends Migration
         $categories = DB::table('categories')->select(['id', 'title'])->get();
 
         foreach ($categories as $category) {
-            $slug = Str::slug($category->title).'-'.$category->id;
+            $slug = Str::slug($category->title) . '-' . $category->id;
 
             DB::table('categories')
                 ->where('id', '=', $category->id)
@@ -49,8 +49,10 @@ class AddSlugFieldOnCategoriesTable extends Migration
      */
     public function down(): void
     {
-        Schema::table('categories', function(Blueprint $table) {
-            $table->dropColumn(['slug']);
-        });
+        if (Schema::hasColumn('categories', 'slug')) {
+            Schema::table('categories', function(Blueprint $table) {
+                $table->dropColumn(['slug']);
+            });
+        }
     }
 }

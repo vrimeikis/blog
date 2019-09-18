@@ -33,13 +33,17 @@
 
                             <div class="form-group">
                                 <label for="title">{{ __('Title') }}</label>
-                                <input type="text" id="title" name="title" class="form-control"
-                                       value="{{ old('title', $article->title) }}">
+                                <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $article->title) }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="content">{{ __('Content') }}</label>
                                 <textarea class="form-control" id="content" name="content">{{ old('content', $article->content) }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">{{ __('Slug') }}</label>
+                                <input type="text" id="slug" name="slug" class="form-control" value="{{ old('slug', $article->slug) }}">
                             </div>
 
                             <div class="form-group">

@@ -60,6 +60,7 @@ class ArticleController extends Controller
         $article = Article::create([
             'title' => $request->getTitle(),
             'content' => $request->getContext(),
+            'slug' => $request->getSlug(),
         ]);
 
         $article->categories()->attach($request->getCategoriesIds());
@@ -117,6 +118,7 @@ class ArticleController extends Controller
         $article->update([
             'title' => $request->getTitle(),
             'content' => $request->getContext(),
+            'slug' => $request->getSlug()
         ]);
 
         $article->categories()->sync($request->getCategoriesIds());

@@ -19,6 +19,9 @@ use Illuminate\Support\Collection;
  * @property string $title
  * @property string|null $cover
  * @property string $content
+ * @property string $slug
+ * @property-read int|null $categories_count
+ * @property-read Collection|Category[] $categories
  * @method static Builder|Article newModelQuery()
  * @method static Builder|Article newQuery()
  * @method static Builder|Article query()
@@ -26,17 +29,17 @@ use Illuminate\Support\Collection;
  * @method static Builder|Article whereCover($value)
  * @method static Builder|Article whereCreatedAt($value)
  * @method static Builder|Article whereId($value)
+ * @method static Builder|Article whereSlug($value)
  * @method static Builder|Article whereTitle($value)
  * @method static Builder|Article whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read Collection|Category[] $categories
- * @property-read int|null $categories_count
  */
 class Article extends Model
 {
     protected $fillable = [
         'title',
         'content',
+        'slug',
     ];
 
     /**

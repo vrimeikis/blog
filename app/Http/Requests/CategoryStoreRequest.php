@@ -4,8 +4,15 @@ declare(strict_types = 1);
 
 namespace App\Http\Requests;
 
+use App\Category;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
+/**
+ * Class CategoryStoreRequest
+ * @package App\Http\Requests
+ */
 class CategoryStoreRequest extends FormRequest
 {
     /**
@@ -36,10 +43,75 @@ class CategoryStoreRequest extends FormRequest
     }
 
     /**
+     * @return Validator
+     */
+    protected function getValidatorInstance()
+    {
+        $validator = parent::getValidatorInstance();
+
+        $validator->after(function(Validator $validator) {
+            $category = $this->route()->parameter('category');
+            $categoryId = $category ? (int)$category->id : null;
+            if (
+                ($this->isMethod('put') || $this->isMethod('post')) &&
+                $this->slugExists($categoryId)
+            ) {
+                $validator->errors()
+                    ->add('slug', 'This slug already exists');
+            }
+
+            return;
+        });
+
+        return $validator;
+    }
+
+    /**
+     * @param int|null $categoryId
+     * @return bool
+     */
+    private function slugExists(?int $categoryId = null): bool
+    {
+        $query = Category::query()->where('slug', '=', $this->getSlug());
+
+        if ($categoryId !== null) {
+            $query->where('id', '!=', $categoryId);
+        }
+
+        $category = $query->first();
+
+        if (!empty($category)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return string
      */
     public function getTitle(): string
     {
         return $this->input('title');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        $slugUnprepared = $this->input('slug');
+
+        if (is_string($slugUnprepared)) {
+            $slugUnprepared = trim($slugUnprepared);
+        }
+
+        if (empty($slugUnprepared)) {
+            $slugUnprepared = $this->getTitle();
+        }
+
+        $slug = Str::slug($slugUnprepared);
+
+        return $slug;
     }
 }

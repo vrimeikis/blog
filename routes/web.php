@@ -11,8 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'Front\HomeController')->name('home');
+
+Route::get('article/{slug}', 'Front\ArticleController@show')
+    ->name('article.show');
+
+Route::group(['prefix' => 'category', 'as' => 'category.'], function() {
+    Route::get('articles/{slug}', 'Front\CategoryController@articles')
+        ->name('articles.list');
 });
 
 Route::group(['prefix' => 'admin'], function() {

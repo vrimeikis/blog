@@ -4,12 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers\Front;
 
-use App\ContactMessage;
 use App\Http\Requests\SendContactMessageRequest;
-use App\Mail\ContactNotificationMail;
+use App\Services\ContactService;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 /**
@@ -18,6 +16,20 @@ use Illuminate\View\View;
  */
 class ContactController extends Controller
 {
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+
+    /**
+     * ContactController constructor.
+     * @param ContactService $contactService
+     */
+    public function __construct(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+    }
+
     /**
      * @return View
      */
@@ -32,14 +44,11 @@ class ContactController extends Controller
      */
     public function sendEmail(SendContactMessageRequest $request): RedirectResponse
     {
-        $message = ContactMessage::query()->create([
-            'name' => $request->getName(),
-            'email' => $request->getEmail(),
-            'message' => $request->getMessage(),
-        ]);
-
-        Mail::to('vytautas.rimeikis@gmail.com')
-            ->send(new ContactNotificationMail($message));
+        $this->contactService->saveAndSendNotification(
+            $request->getMessage(),
+            $request->getEmail(),
+            $request->getName()
+        );
 
         return redirect()->route('contact.us')
             ->with('status', 'Thanks for your request, we will replay as soon as possible!');

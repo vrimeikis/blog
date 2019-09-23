@@ -21,6 +21,9 @@ Route::group(['prefix' => 'category', 'as' => 'category.'], function() {
         ->name('articles.list');
 });
 
+Route::get('contact-us', 'Front\ContactController')->name('contact.us');
+Route::post('contact-us-send', 'Front\ContactController@sendEmail')->name('contact.send');
+
 Route::group(['prefix' => 'admin'], function() {
     Auth::routes(['register' => false]);
 

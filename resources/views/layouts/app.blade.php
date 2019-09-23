@@ -42,9 +42,14 @@
                 <ul class="navbar-nav ml-auto">
                     @foreach($categories as $category)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('category.articles.list', ['slug' => $category->slug]) }}">{{ $category->title }}</a>
+                            <a class="nav-link"
+                               href="{{ route('category.articles.list', ['slug' => $category->slug]) }}">{{ $category->title }}</a>
                         </li>
                     @endforeach
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ route('contact.us') }}">{{ __('Contact us') }}</a>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -78,7 +78,9 @@ abstract class Repository
         $attributeValue,
         string $attributeField = self::DEFAULT_ATTRIBUTES_FIELD
     ): int {
-        return $this->makeQuery()->where($attributeField, $attributeValue)->update($data);
+        return $this->makeQuery()
+            ->where($attributeField, $attributeValue)
+            ->update($data);
     }
 
     /**

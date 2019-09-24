@@ -50,7 +50,7 @@ class ArticleStoreRequest extends FormRequest
 
         $validator->after(function(Validator $validator) {
             $article = $this->route()->parameter('article');
-            $articleId = $article ? (int)$article->id : null;
+            $articleId = $article ? (int)$article : null;
             if (
                 ($this->isMethod('put') || $this->isMethod('post')) &&
                 $this->slugExists($articleId)

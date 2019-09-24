@@ -4,13 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Article;
 use App\Category;
 use App\Http\Requests\ArticleStoreRequest;
+use App\Services\ArticleService;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -20,13 +19,28 @@ use Illuminate\View\View;
 class ArticleController extends Controller
 {
     /**
+     * @var ArticleService
+     */
+    private $articleService;
+
+    /**
+     * ArticleController constructor.
+     * @param ArticleService $articleService
+     */
+    public function __construct(ArticleService $articleService)
+    {
+        $this->articleService = $articleService;
+    }
+
+
+    /**
      * Display a listing of the resource.
      *
      * @return View
      */
     public function index(): View
     {
-        $paginatedArticles = Article::paginate();
+        $paginatedArticles = $this->articleService->getPaginateData();
 
         return view('admin.article.list', [
             'articles' => $paginatedArticles,
@@ -56,22 +70,13 @@ class ArticleController extends Controller
      */
     public function store(ArticleStoreRequest $request): RedirectResponse
     {
-        /** @var Article $article */
-        $article = Article::create([
-            'title' => $request->getTitle(),
-            'content' => $request->getContext(),
-            'slug' => $request->getSlug(),
-        ]);
-
-        $article->categories()->attach($request->getCategoriesIds());
-
-        $cover = $request->getCover();
-        if ($cover !== null) {
-            $uploadedFile = $cover->store('article/'.$article->id);
-            $article->cover = $uploadedFile;
-            $article->save();
-        }
-
+        $this->articleService->createNewArticle(
+            $request->getTitle(),
+            $request->getContext(),
+            $request->getSlug(),
+            $request->getCategoriesIds(),
+            $request->getCover()
+        );
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article created successfully!');
@@ -96,7 +101,7 @@ class ArticleController extends Controller
      */
     public function edit(int $id): View
     {
-        $article = Article::with('categories')->find($id);
+        $article = $this->articleService->getById($id);
         $categories = Category::orderBy('title')
             ->pluck('title', 'id');
 
@@ -110,31 +115,20 @@ class ArticleController extends Controller
      * Update the specified resource in storage.
      *
      * @param ArticleStoreRequest $request
-     * @param Article $article
+     * @param int $id
      * @return RedirectResponse
      */
-    public function update(ArticleStoreRequest $request, Article $article): RedirectResponse
+    public function update(ArticleStoreRequest $request, int $id): RedirectResponse
     {
-        $article->update([
-            'title' => $request->getTitle(),
-            'content' => $request->getContext(),
-            'slug' => $request->getSlug()
-        ]);
-
-        $article->categories()->sync($request->getCategoriesIds());
-
-        if ($request->getDeleteCoverOption() !== null) {
-            Storage::delete($article->cover);
-            $article->cover = null;
-            $article->save();
-        }
-
-        $cover = $request->getCover();
-        if ($cover !== null) {
-            $uploadedFile = $cover->store('article/'.$article->id);
-            $article->cover = $uploadedFile;
-            $article->save();
-        }
+        $this->articleService->updateById(
+            $id,
+            $request->getTitle(),
+            $request->getContext(),
+            $request->getSlug(),
+            $request->getCategoriesIds(),
+            $request->getDeleteCoverOption(),
+            $request->getCover()
+        );
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article updated successfully!');
@@ -148,7 +142,7 @@ class ArticleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        Article::where('id', '=', $id)->delete();
+        $this->articleService->destroyById($id);
 
         return redirect()->route('admin.articles.index')
             ->with('status', 'Article deleted!');

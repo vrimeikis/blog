@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\ContactMessage;
 use App\Mail\ContactNotificationMail;
+use App\Repositories\ContactMessageRepository;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -14,6 +15,21 @@ use Illuminate\Support\Facades\Mail;
  */
 class ContactService
 {
+    /**
+     * @var ContactMessageRepository
+     */
+    private $contactMessageRepository;
+
+    /**
+     * ContactService constructor.
+     * @param ContactMessageRepository $contactMessageRepository
+     */
+    public function __construct(ContactMessageRepository $contactMessageRepository)
+    {
+        $this->contactMessageRepository = $contactMessageRepository;
+    }
+
+
     /**
      * @param string $messageText
      * @param string $fromMail
@@ -24,7 +40,8 @@ class ContactService
         string $fromMail,
         ?string $toName = null
     ): void {
-        $message = ContactMessage::query()->create([
+        /** @var ContactMessage $message */
+        $message = $this->contactMessageRepository->create([
             'name' => $toName,
             'email' => $fromMail,
             'message' => $messageText,

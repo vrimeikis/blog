@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Providers;
 
 use App\Category;
+use App\Repositories\ContactMessageRepository;
 use App\Services\ContactService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -20,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerRepositories();
         $this->registerServices();
     }
 
@@ -39,5 +43,13 @@ class AppServiceProvider extends ServiceProvider
     private function registerServices(): void
     {
         $this->app->singleton(ContactService::class);
+    }
+
+    /**
+     * Singleton Repositories class
+     */
+    private function registerRepositories(): void
+    {
+        $this->app->singleton(ContactMessageRepository::class);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Article;
 use App\Repositories\Abstracts\Repository;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ArticleRepository
@@ -20,5 +21,15 @@ class ArticleRepository extends Repository
     public function model(): string
     {
         return Article::class;
+    }
+
+    /**
+     * @param string $slug
+     * @return Article|Model|null
+     */
+    public function findBySlug(string $slug): ?Article
+    {
+        return $this->makeQuery()->where('slug', '=', $slug)
+            ->first();
     }
 }

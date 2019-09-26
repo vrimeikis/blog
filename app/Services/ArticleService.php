@@ -139,4 +139,11 @@ class ArticleService
     {
         $article->categories()->sync($categoriesIds);
     }
+
+    public function getBySlug(string $slug): ?Model
+    {
+        $article = $this->articleRepository->findBySlug($slug);
+
+        return $article;
+    }
 }

@@ -65,12 +65,14 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param string $slug
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(string $slug): JsonResponse
     {
-        //
+        $article = $this->articleService->getBySlug($slug);
+
+        return response()->json($article);
     }
 
     /**

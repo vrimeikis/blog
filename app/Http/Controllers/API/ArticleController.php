@@ -38,7 +38,7 @@ class ArticleController extends Controller
      */
     public function index(): JsonResponse
     {
-        $articles = $this->articleService->getPaginateData();
+        $articles = $this->articleService->getPaginateDataDTO();
 
         return response()->json($articles);
     }

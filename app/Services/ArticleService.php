@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Article;
 use App\DTO\ArticleDTO;
+use App\DTO\CollectionDTO;
 use App\Repositories\ArticleRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,22 @@ class ArticleService
     public function getPaginateData(): LengthAwarePaginator
     {
         return $this->articleRepository->paginate();
+    }
+
+    /**
+     * @return CollectionDTO
+     */
+    public function getPaginateDataDTO(): CollectionDTO
+    {
+        $collectionDTO = new CollectionDTO();
+
+        $articles = $this->articleRepository->paginate();
+
+        foreach ($articles as $article) {
+            $collectionDTO->pushItem(new ArticleDTO($article));
+        }
+
+        return $collectionDTO;
     }
 
     public function createNewArticle(

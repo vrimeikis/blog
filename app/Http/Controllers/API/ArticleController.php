@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\ApiArticleStoreRequest;
 use App\Services\ArticleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,18 +46,26 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ApiArticleStoreRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ApiArticleStoreRequest $request): JsonResponse
     {
-        //
+        $article = $this->articleService->createNewArticle(
+            $request->getTitle(),
+            $request->getContext(),
+            $request->getSlug(),
+            $request->getCategoriesIds(),
+            $request->getCover()
+        );
+
+        return response()->json($article);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -67,8 +76,8 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -79,7 +88,7 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

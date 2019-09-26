@@ -56,12 +56,14 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param string $slug
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(string $slug): JsonResponse
     {
-        //
+        $category = $this->categoryService->getBySlugDTO($slug);
+
+        return response()->json($category);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Services;
 
+use App\DTO\CategoryDTO;
 use App\Repositories\CategoryRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -33,5 +34,18 @@ class CategoryService
     public function getPaginateData(): LengthAwarePaginator
     {
         return $this->categoryRepository->paginate();
+    }
+
+    /**
+     * @param string $slug
+     * @return CategoryDTO
+     */
+    public function getBySlugDTO(string $slug): CategoryDTO
+    {
+        $category = $this->categoryRepository->getBySlug($slug);
+
+        $categoryDTO = new CategoryDTO($category);
+
+        return $categoryDTO;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Services;
 
 use App\Article;
+use App\DTO\ArticleDTO;
 use App\Repositories\ArticleRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -140,10 +141,16 @@ class ArticleService
         $article->categories()->sync($categoriesIds);
     }
 
-    public function getBySlug(string $slug): ?Model
+    /**
+     * @param string $slug
+     * @return ArticleDTO|null
+     */
+    public function getBySlug(string $slug): ?ArticleDTO
     {
         $article = $this->articleRepository->findBySlug($slug);
 
-        return $article;
+        $articleDTO = new ArticleDTO($article);
+
+        return $articleDTO;
     }
 }

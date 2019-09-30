@@ -50,7 +50,9 @@ class ArticleService
     {
         $collectionDTO = new CollectionDTO();
 
-        $articles = $this->articleRepository->paginate();
+        $articles = $this->articleRepository->makeQuery()
+            ->with('categories')
+            ->paginate();
 
         foreach ($articles as $article) {
             $collectionDTO->pushItem(new ArticleDTO($article));
@@ -59,6 +61,14 @@ class ArticleService
         return $collectionDTO;
     }
 
+    /**
+     * @param string $title
+     * @param string $content
+     * @param string $slug
+     * @param array $categoriesIds
+     * @param UploadedFile|null $cover
+     * @return Article
+     */
     public function createNewArticle(
         string $title,
         string $content,
@@ -93,6 +103,16 @@ class ArticleService
         return $this->articleRepository->find($id);
     }
 
+    /**
+     * @param int $id
+     * @param string $title
+     * @param string $content
+     * @param string $slug
+     * @param array $categoriesIds
+     * @param int|null $deleteCover
+     * @param UploadedFile|null $cover
+     * @return int
+     */
     public function updateById(
         int $id,
         string $title,

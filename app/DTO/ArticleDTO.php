@@ -6,6 +6,10 @@ namespace App\DTO;
 
 use App\Article;
 
+/**
+ * Class ArticleDTO
+ * @package App\DTO
+ */
 class ArticleDTO extends BaseDTO
 {
     /**
@@ -33,6 +37,25 @@ class ArticleDTO extends BaseDTO
             'slug' => $this->article->slug,
             'cover' => $this->article->cover,
             'content' => $this->article->content,
+            'categories' => $this->categoriesDtoCollection(),
         ];
+    }
+
+    /**
+     * @return CollectionDTO
+     */
+    private function categoriesDtoCollection(): CollectionDTO
+    {
+        $categoriesDTO = new CollectionDTO();
+
+        if ($this->article->categories === null) {
+            return $categoriesDTO;
+        }
+
+        foreach ($this->article->categories as $category) {
+            $categoriesDTO->pushItem(new CategoryDTO($category));
+        }
+
+        return $categoriesDTO;
     }
 }

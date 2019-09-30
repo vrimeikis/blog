@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\DTO;
 
 use App\Article;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class ArticleDTO
@@ -35,7 +36,7 @@ class ArticleDTO extends BaseDTO
         return [
             'title' => $this->article->title,
             'slug' => $this->article->slug,
-            'cover' => $this->article->cover ? asset('storage/'.$this->article->cover) : null,
+            'cover' => $this->article->cover ? Storage::url($this->article->cover) : null,
             'content' => $this->article->content,
             'categories' => $this->categoriesDtoCollection(),
         ];

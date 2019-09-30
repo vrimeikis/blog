@@ -35,7 +35,7 @@ class ArticleDTO extends BaseDTO
         return [
             'title' => $this->article->title,
             'slug' => $this->article->slug,
-            'cover' => $this->article->cover,
+            'cover' => $this->article->cover ? asset('storage/'.$this->article->cover) : null,
             'content' => $this->article->content,
             'categories' => $this->categoriesDtoCollection(),
         ];

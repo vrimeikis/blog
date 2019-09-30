@@ -4,11 +4,16 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\EmptyDataException;
 use App\Http\Requests\ApiArticleStoreRequest;
 use App\Services\ArticleService;
+use Error;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Throwable;
 
 /**
  * Class ArticleController
@@ -38,9 +43,21 @@ class ArticleController extends Controller
      */
     public function index(): JsonResponse
     {
-        $articles = $this->articleService->getPaginateDataDTO();
+        try {
+            $articles = $this->articleService->getPaginateDataDTO();
 
-        return response()->json($articles);
+            return response()->json($articles);
+        } catch (EmptyDataException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], $exception->getCode());
+        } catch (Throwable $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something wrong!'
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -70,9 +87,27 @@ class ArticleController extends Controller
      */
     public function show(string $slug): JsonResponse
     {
-        $article = $this->articleService->getBySlug($slug);
+        try {
+            $article = $this->articleService->getBySlug($slug);
 
-        return response()->json($article);
+            return response()->json($article);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not found data by slug!',
+            ], JsonResponse::HTTP_NOT_FOUND);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something wrong!',
+            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Error $error) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fatal error',
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     /**

@@ -7,9 +7,11 @@ namespace App\Services;
 use App\Article;
 use App\DTO\ArticleDTO;
 use App\DTO\CollectionDTO;
+use App\Exceptions\EmptyDataException;
 use App\Repositories\ArticleRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,6 +47,7 @@ class ArticleService
 
     /**
      * @return CollectionDTO
+     * @throws EmptyDataException
      */
     public function getPaginateDataDTO(): CollectionDTO
     {
@@ -53,6 +56,10 @@ class ArticleService
         $articles = $this->articleRepository->makeQuery()
             ->with('categories')
             ->paginate();
+
+        if ($articles->isEmpty()) {
+            throw EmptyDataException::noData();
+        }
 
         foreach ($articles as $article) {
             $collectionDTO->pushItem(new ArticleDTO($article));

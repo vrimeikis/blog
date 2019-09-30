@@ -25,11 +25,11 @@ class ArticleRepository extends Repository
 
     /**
      * @param string $slug
-     * @return Article|Model|null
+     * @return Article|Model
      */
-    public function findBySlug(string $slug): ?Article
+    public function findBySlug(string $slug): Article
     {
         return $this->makeQuery()->where('slug', '=', $slug)
-            ->first();
+            ->firstOrFail();
     }
 }

@@ -32,4 +32,14 @@ class ArticleRepository extends Repository
         return $this->makeQuery()->where('slug', '=', $slug)
             ->firstOrFail();
     }
+
+    /**
+     * @param string $slug
+     *
+     * @return bool
+     */
+    public function existsBySlug(string $slug): bool {
+        return $this->makeQuery()->where('slug', '=', $slug)
+            ->exists();
+    }
 }

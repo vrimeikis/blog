@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Services;
 
 use App\ContactMessage;
+use App\Events\NewContactRequestEvent;
 use App\Mail\ContactNotificationMail;
 use App\Repositories\ContactMessageRepository;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +48,6 @@ class ContactService
             'message' => $messageText,
         ]);
 
-        Mail::to('vytautas.rimeikis@gmail.com')
-            ->send(new ContactNotificationMail($message));
+        event(new NewContactRequestEvent($message));
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\NewContactRequestEvent;
+use App\Listeners\SendNewContactRequestNotificationListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -18,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        NewContactRequestEvent::class => [
+            SendNewContactRequestNotificationListener::class,
+        ],
     ];
 
     /**
@@ -25,10 +30,8 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         parent::boot();
-
         //
     }
 }
